@@ -159,6 +159,12 @@ void display7SEG(int num){
 		break;
 	}
 }
+
+typedef enum {
+	EN0,
+	EN1,
+} eLedStatus;
+
 /* USER CODE END 0 */
 
 /**
@@ -198,7 +204,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   setTimer1(100);
   setTimer2(50);
-  int led_status = 1;
+  eLedStatus currentState = EN0;
   while (1)
   {
 	  if (timer1_flag == 1){
@@ -208,17 +214,17 @@ int main(void)
 
 	  if (timer2_flag == 1){
 		  setTimer2(50);
-		  switch(led_status){
-		  case 1:
+		  switch(currentState){
+		  case EN0:
 			  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, RESET);
 		  	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
+		  	  currentState = EN1;
 		  	  display7SEG(1);
-		  	  led_status =2;
 		  	  break;
-		  case 2:
+		  case EN1:
 			  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		  	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, RESET);
-		  	  led_status=1;
+		  	  currentState = EN2;
 		  	  display7SEG(2);
 		  	  break;
 		  default:
