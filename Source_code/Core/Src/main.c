@@ -162,7 +162,7 @@ void display7SEG(int num){
 
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {1,2,3,4};
+int led_buffer[4] = {1,3,2,8};
 void update7SEG(int index) {
 	switch(index) {
 	  case 0:
@@ -170,33 +170,29 @@ void update7SEG(int index) {
 		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, SET);
-		  display7SEG(led_buffer[0]);
 		  break;
 	  case 1:
 		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, RESET);
 		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, SET);
-		  display7SEG(led_buffer[1]);
 		  break;
 	  case 2:
 		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, RESET);
 		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, SET);
-		  display7SEG(led_buffer[2]);
 		  break;
 	  case 3:
 		  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, SET);
 		  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, SET);
 		  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, SET);
 		  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, RESET);
-		  display7SEG(led_buffer[3]);
 		  break;
 	  default:
 		  break;
-
 	}
+	display7SEG(led_buffer[index]);
 }
 /* USER CODE END 0 */
 
@@ -236,7 +232,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   setTimer1(100);
-  setTimer2(25);
+  setTimer2(50);
   setTimer3(100);
   while (1)
   {
@@ -246,7 +242,7 @@ int main(void)
 	  }
 
 	  if (timer2_flag == 1){
-		  setTimer2(25);
+		  setTimer2(50);
 		  update7SEG(index_led);
 		  index_led++;
 		  if (index_led >= MAX_LED) index_led = 0;
