@@ -162,7 +162,7 @@ void display7SEG(int num){
 
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {1,3,2,8};
+int led_buffer[4] = {0,0,0,0};
 void update7SEG(int index) {
 	switch(index) {
 	  case 0:
@@ -193,6 +193,14 @@ void update7SEG(int index) {
 		  break;
 	}
 	display7SEG(led_buffer[index]);
+}
+
+int hour = 15 , minute = 8 , second = 50;
+void updateClockBuffer(){
+	led_buffer[0] = hour/10;
+	led_buffer[1] = hour%10;
+	led_buffer[2] = minute/10;
+	led_buffer[3] = minute%10;
 }
 /* USER CODE END 0 */
 
@@ -231,11 +239,30 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  setTimer0(100);
   setTimer1(100);
   setTimer2(25);
   setTimer3(100);
   while (1)
   {
+	  if (timer0_flag == 1){
+		  setTimer0(100);
+		  second++;
+		  if(second >= 60) {
+			  second = 0;
+			  minute++;
+		  }
+		  if(minute >= 60) {
+			  minute = 0;
+			  hour++;
+		  }
+		  if(hour >= 24) {
+			  hour = 0;
+		  }
+		  updateClockBuffer();
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  }
+
 	  if (timer1_flag == 1){
 		  setTimer1(100);
 		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
@@ -250,7 +277,7 @@ int main(void)
 
 	  if (timer3_flag == 1){
 		  setTimer3(100);
-		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+
 	  }
     /* USER CODE END WHILE */
 
