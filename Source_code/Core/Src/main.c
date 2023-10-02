@@ -322,7 +322,9 @@ void displayColLEDMatrix(int num){
 
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer[8] = {0x00,0xFC,0x32,0x31,0x31,0x32,0xFC,0x00};
+uint8_t matrix_buffer[8] = {0x1C,0x22,0x42,0x84,0x84,0x42,0x22,0x1C};
+uint8_t matrix_1[8] = {0x1C,0x22,0x42,0x84,0x84,0x42,0x22,0x1C};
+uint8_t matrix_2[8] = {0x1C,0x3E,0x66,0xC4,0xC4,0x66,0x3E,0x1C};
 void resetLEDMatrix(){
 	HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, SET);
 	HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, SET);
@@ -342,17 +344,32 @@ void resetLEDMatrix(){
 	HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW6_Pin, SET);
 	HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, SET);
 }
-
+int state = 0;
 void shiftLeft(){
-	int initVal = matrix_buffer[0];
-	matrix_buffer[0] = matrix_buffer[1];
-	matrix_buffer[1] = matrix_buffer[2];
-	matrix_buffer[2] = matrix_buffer[3];
-	matrix_buffer[3] = matrix_buffer[4];
-	matrix_buffer[4] = matrix_buffer[5];
-	matrix_buffer[5] = matrix_buffer[6];
-	matrix_buffer[6] = matrix_buffer[7];
-	matrix_buffer[7] = initVal;
+	if (state == 0){
+		matrix_buffer[0] = matrix_2[0];
+			matrix_buffer[1] = matrix_2[1];
+			matrix_buffer[2] = matrix_2[2];
+			matrix_buffer[3] = matrix_2[3];
+			matrix_buffer[4] = matrix_2[4];
+			matrix_buffer[5] = matrix_2[5];
+			matrix_buffer[6] = matrix_2[6];
+			matrix_buffer[7] = matrix_2[7];
+			state++;
+	}
+	if (state == 1){
+		matrix_buffer[0] = matrix_1[0];
+			matrix_buffer[1] = matrix_1[1];
+			matrix_buffer[2] = matrix_1[2];
+			matrix_buffer[3] = matrix_1[3];
+			matrix_buffer[4] = matrix_1[4];
+			matrix_buffer[5] = matrix_1[5];
+			matrix_buffer[6] = matrix_1[6];
+			matrix_buffer[7] = matrix_1[7];
+			state--;
+	}
+
+
 }
 
 void updateLEDMatrix(){
@@ -511,9 +528,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 999;
+  htim2.Init.Prescaler = 799;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 7;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
