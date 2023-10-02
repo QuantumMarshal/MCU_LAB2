@@ -418,7 +418,7 @@ int main(void)
 //  setTimer0(100);
 //  setTimer1(100);
 //  setTimer2(25);
-  setTimer3(20);
+  setTimer3(5);
   resetLEDMatrix();
   while (1)
   {
@@ -453,7 +453,7 @@ int main(void)
 //	  }
 
 	  if (timer3_flag == 1){
-		  setTimer3(20);
+		  setTimer3(5);
 		  updateLEDMatrix(index_led_matrix++);
 
 		  if (index_led_matrix >= MAX_LED_MATRIX) {
