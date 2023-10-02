@@ -345,14 +345,23 @@ void updateLEDMatrix(int index){
 }
 
 void resetLEDMatrix(){
-	HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, RESET);
-	HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, RESET);
-	HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, RESET);
-	HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, RESET);
-	HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, RESET);
-	HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, RESET);
-	HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, RESET);
-	HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, RESET);
+	HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, SET);
+	HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, SET);
+	HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, SET);
+	HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, SET);
+	HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, SET);
+	HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, SET);
+	HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, SET);
+	HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, SET);
+
+	HAL_GPIO_WritePin(ROW0_GPIO_Port, ROW0_Pin, SET);
+	HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, SET);
+	HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, SET);
+	HAL_GPIO_WritePin(ROW3_GPIO_Port, ROW3_Pin, SET);
+	HAL_GPIO_WritePin(ROW4_GPIO_Port, ROW4_Pin, SET);
+	HAL_GPIO_WritePin(ROW5_GPIO_Port, ROW5_Pin, SET);
+	HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW6_Pin, SET);
+	HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, SET);
 }
 /* USER CODE END 0 */
 
@@ -394,7 +403,7 @@ int main(void)
 //  setTimer0(100);
 //  setTimer1(100);
 //  setTimer2(25);
-  setTimer3(100);
+  setTimer3(500);
   resetLEDMatrix();
   while (1)
   {
@@ -429,7 +438,8 @@ int main(void)
 //	  }
 
 	  if (timer3_flag == 1){
-		  setTimer3(200);
+		  setTimer3(500);
+		  resetLEDMatrix();
 		  updateLEDMatrix(index_led_matrix++);
 		  if (index_led_matrix >= MAX_LED_MATRIX) index_led_matrix = 0;
 	  }
@@ -494,9 +504,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 7;
+  htim2.Init.Prescaler = 999;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 7;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
