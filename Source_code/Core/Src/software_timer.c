@@ -33,7 +33,7 @@ void setTimer2(int duration){
 }
 
 void setTimer3(int duration){
-	timer3_counter = duration;
+	timer3_counter = duration/1000;
 	timer3_flag = 0;
 }
 

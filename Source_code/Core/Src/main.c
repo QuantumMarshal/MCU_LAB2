@@ -308,40 +308,58 @@ void displayRowLEDMatrix(int num){
 
 }
 
+#define PIN_C0 		GPIO_PIN_8
+#define PIN_C1 		GPIO_PIN_9
+#define PIN_C2 		GPIO_PIN_10
+#define PIN_C3 		GPIO_PIN_11
+#define PIN_C4 		GPIO_PIN_12
+#define PIN_C5 		GPIO_PIN_13
+#define PIN_C6 		GPIO_PIN_14
+#define PIN_C7 		GPIO_PIN_15
+#define PIN_R0 		GPIO_PIN_2
+#define PIN_R1 		GPIO_PIN_3
+#define PIN_R2 		GPIO_PIN_10
+#define PIN_R3 		GPIO_PIN_11
+#define PIN_R4 		GPIO_PIN_12
+#define PIN_R5 		GPIO_PIN_13
+#define PIN_R6 		GPIO_PIN_14
+#define PIN_R7 		GPIO_PIN_15
+
+#define GPIO_PORT_COL		GPIOB
+#define GPIO_PORT_ROW		GPIOA
+
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer[8] = {0x18,0x24,0x42,0x42,0x7E,0x42,0x42,0x42};
-void updateLEDMatrix(int index){
-    switch (index){
-        case 0:
-            break;
-        case 1:
+uint8_t matrix_buffer[8] = {0x00,0x38,0x44,0x44,0x44,0x7c,0x44,0x44};
 
-            break;
-        case 2:
+void ledMatrixDriver_Reset(void) {
+	  HAL_GPIO_WritePin(GPIO_PORT_ROW, PIN_R0|PIN_R1|PIN_R2|PIN_R3
+	                          |PIN_R4|PIN_R5|PIN_R6|PIN_R7,SET);
 
-            break;
-        case 3:
+	  HAL_GPIO_WritePin(GPIO_PORT_COL, PIN_C0|PIN_C1|PIN_C2|PIN_C3
+              	  	  	  	  |PIN_C4|PIN_C5|PIN_C6|PIN_C7, SET);
+}
 
-            break;
-        case 4:
+static uint16_t ledMatrixRowPins[8] = {
+		PIN_R0,
+		PIN_R1,
+		PIN_R2,
+		PIN_R3,
+		PIN_R4,
+		PIN_R5,
+		PIN_R6,
+		PIN_R7
+};
+void updateLEDMatrix(void) {
+	ledMatrixDriver_Reset();
+	HAL_GPIO_WritePin(GPIO_PORT_ROW, ledMatrixRowPins[index_led_matrix], RESET); //on row
+	HAL_GPIO_WritePin(GPIO_PORT_COL, matrix_buffer[index_led_matrix] << 0x08, RESET); //on col
 
-            break;
-        case 5:
+	index_led_matrix++;
 
-            break;
-        case 6:
-
-            break;
-        case 7:
-
-            break;
-        default:
-            break;
-
-    }
-    displayColLEDMatrix(matrix_buffer[index]);
-    displayRowLEDMatrix(index);
+	if (index_led_matrix == 8) {
+		index_led_matrix = 0;
+	}
 }
 
 void resetLEDMatrix(){
@@ -403,7 +421,7 @@ int main(void)
 //  setTimer0(100);
 //  setTimer1(100);
 //  setTimer2(25);
-  setTimer3(500);
+  setTimer3(1000);
   resetLEDMatrix();
   while (1)
   {
@@ -438,10 +456,8 @@ int main(void)
 //	  }
 
 	  if (timer3_flag == 1){
-		  setTimer3(500);
-		  resetLEDMatrix();
-		  updateLEDMatrix(index_led_matrix++);
-		  if (index_led_matrix >= MAX_LED_MATRIX) index_led_matrix = 0;
+		  setTimer3(2000);
+		  updateLEDMatrix();
 	  }
     /* USER CODE END WHILE */
 
