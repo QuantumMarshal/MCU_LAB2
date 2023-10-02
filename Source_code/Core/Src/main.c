@@ -330,7 +330,7 @@ void displayRowLEDMatrix(int num){
 
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-uint8_t matrix_buffer[8] = {0x00,0x38,0x44,0x44,0x44,0x7c,0x44,0x44};
+uint8_t matrix_buffer[8] = {0x000,0x38,0x44,0x44,0x44,0x7c,0x44,0x44};
 
 void ledMatrixDriver_Reset(void) {
 	  HAL_GPIO_WritePin(GPIO_PORT_ROW, PIN_R0|PIN_R1|PIN_R2|PIN_R3
@@ -350,6 +350,19 @@ static uint16_t ledMatrixRowPins[8] = {
 		PIN_R6,
 		PIN_R7
 };
+
+void shiftLeft(){
+	int initVal = matrix_buffer[0];
+	matrix_buffer[0] = matrix_buffer[1];
+	matrix_buffer[1] = matrix_buffer[2];
+	matrix_buffer[2] = matrix_buffer[3];
+	matrix_buffer[3] = matrix_buffer[4];
+	matrix_buffer[4] = matrix_buffer[5];
+	matrix_buffer[5] = matrix_buffer[6];
+	matrix_buffer[6] = matrix_buffer[7];
+	matrix_buffer[7] = initVal;
+}
+
 void updateLEDMatrix(void) {
 	ledMatrixDriver_Reset();
 	HAL_GPIO_WritePin(GPIO_PORT_ROW, ledMatrixRowPins[index_led_matrix], RESET); //on row
@@ -358,6 +371,7 @@ void updateLEDMatrix(void) {
 	index_led_matrix++;
 
 	if (index_led_matrix == 8) {
+		shiftLeft();
 		index_led_matrix = 0;
 	}
 }
@@ -381,6 +395,8 @@ void resetLEDMatrix(){
 	HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW6_Pin, SET);
 	HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, SET);
 }
+
+
 /* USER CODE END 0 */
 
 /**
@@ -418,42 +434,42 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//  setTimer0(100);
-//  setTimer1(100);
-//  setTimer2(25);
+  setTimer0(1000);
+  setTimer1(1000);
+  setTimer2(250);
   setTimer3(1000);
   resetLEDMatrix();
   while (1)
   {
-//	  if (timer0_flag == 1){
-//		  setTimer0(100);
-//		  second++;
-//		  if(second >= 60) {
-//			  second = 0;
-//			  minute++;
-//		  }
-//		  if(minute >= 60) {
-//			  minute = 0;
-//			  hour++;
-//		  }
-//		  if(hour >= 24) {
-//			  hour = 0;
-//		  }
-//		  updateClockBuffer();
-//		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-//	  }
-//
-//	  if (timer1_flag == 1){
-//		  setTimer1(100);
-//		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-//	  }
-//
-//	  if (timer2_flag == 1){
-//		  setTimer2(25);
-//		  update7SEG(index_led);
-//		  index_led++;
-//		  if (index_led >= MAX_LED) index_led = 0;
-//	  }
+	  if (timer0_flag == 1){
+		  setTimer0(1000);
+		  second++;
+		  if(second >= 60) {
+			  second = 0;
+			  minute++;
+		  }
+		  if(minute >= 60) {
+			  minute = 0;
+			  hour++;
+		  }
+		  if(hour >= 24) {
+			  hour = 0;
+		  }
+		  updateClockBuffer();
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  }
+
+	  if (timer1_flag == 1){
+		  setTimer1(1000);
+		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+	  }
+
+	  if (timer2_flag == 1){
+		  setTimer2(250);
+		  update7SEG(index_led);
+		  index_led++;
+		  if (index_led >= MAX_LED) index_led = 0;
+	  }
 
 	  if (timer3_flag == 1){
 		  setTimer3(2000);
